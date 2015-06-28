@@ -39,6 +39,8 @@
 <v t="amd.20150503183546.1"><vh>spuraction</vh></v>
 <v t="amd.20150503185058.1"><vh>drawspur</vh></v>
 <v t="2015.20150628102033.1"><vh>drawspuraction</vh></v>
+<v t="2015.20150628113415.1"><vh>drawspur_1</vh></v>
+<v t="2015.20150628113330.1"><vh>drawspuraction_1</vh></v>
 <v t="office.20150504093049.1"><vh>cube</vh></v>
 <v t="office.20150504093053.1"><vh>cubeaction</vh></v>
 <v t="office.20150504183254.1"><vh>fileuploadform</vh></v>
@@ -1449,9 +1451,6 @@ y_g2 = y_g1+rp_g1 + rp_g2
 # 將第1齒輪順時鐘轉 90 度
 # 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
 
-ctx.font = "10px Verdana";
-ctx.fillText("組員:07",x_g1, y_g1);
-
 ctx.save()
 # translate to the origin of second gear
 ctx.translate(x_g1, y_g1)
@@ -1485,6 +1484,407 @@ ctx.restore()
     return outstring
 
 </t>
+<t tx="2015.20150628113330.1">@cherrypy.expose
+# N 為齒數, M 為模數, P 為壓力角
+def drawspuraction_1(self, N=15, N1=24,N2=15,N3=24,N4=15,N5=24,N6=15,N7=24,N8=15,N9=24,M=10, P=20):
+    outstring =''' 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;!-- 載入 brython.js --&gt;
+&lt;script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"&gt;&lt;/script&gt;
+&lt;script src="/static/Cango2D.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;script src="/static/gearUtils-04.js" type="text/javascript"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;!-- 啟動 brython() --&gt;
+&lt;body onload="brython()"&gt;
+
+第1齒數:'''+str(N)+'''&lt;output name=N for=str(N)&gt;&lt;br /&gt;
+第2齒數:'''+str(N1)+'''&lt;output name=N1 for=str(N1)&gt;&lt;br /&gt;
+第3齒數:'''+str(N2)+'''&lt;output name=N for=str(N2)&gt;&lt;br /&gt;
+第4齒數:'''+str(N3)+'''&lt;output name=N1 for=str(N3)&gt;&lt;br /&gt;
+第5齒數:'''+str(N4)+'''&lt;output name=N for=str(N4)&gt;&lt;br /&gt;
+第6齒數:'''+str(N5)+'''&lt;output name=N1 for=str(N5)&gt;&lt;br /&gt;
+第7齒數:'''+str(N6)+'''&lt;output name=N for=str(N6)&gt;&lt;br /&gt;
+第8齒數:'''+str(N7)+'''&lt;output name=N1 for=str(N7)&gt;&lt;br /&gt;
+第9齒數:'''+str(N8)+'''&lt;output name=N for=str(N8)&gt;&lt;br /&gt;
+第10齒數:'''+str(N9)+'''&lt;output name=N1 for=str(N9)&gt;&lt;br /&gt;
+
+
+
+模數:'''+str(M)+'''&lt;output name=M for=str(M)&gt;&lt;br /&gt;
+壓力角:'''+str(P)+'''&lt;output name=P for=str(P)&gt;&lt;br /&gt;
+
+&lt;a href="drawspur_1"&gt;返回齒輪輸入&lt;/a&gt;&lt;br /&gt;
+
+&lt;!-- 以下為 canvas 畫圖程式 --&gt;
+&lt;script type="text/python"&gt;
+# 從 browser 導入 document
+from browser import document
+from math import *
+# 請注意, 這裡導入位於 Lib/site-packages 目錄下的 spur.py 檔案
+import spur
+
+# 準備在 id="plotarea" 的 canvas 中繪圖
+canvas = document["plotarea"]
+ctx = canvas.getContext("2d")
+
+# 以下利用 spur.py 程式進行繪圖, 接下來的協同設計運算必須要配合使用者的需求進行設計運算與繪圖
+# 其中並將工作分配給其他組員建立類似 spur.py 的相關零件繪圖模組
+# midx, midy 為齒輪圓心座標, rp 為節圓半徑, n 為齒數, pa 為壓力角, color 為線的顏色
+# Gear(midx, midy, rp, n=20, pa=20, color="black"):
+# 模數決定齒的尺寸大小, 囓合齒輪組必須有相同的模數與壓力角
+
+
+# 壓力角 pa 單位為角度
+pa = 20
+# m 為模數
+m = '''+str(M)+'''
+# 第1齒輪齒數
+n_g1 = '''+str(N)+'''
+# 第2齒輪齒數
+n_g2 = '''+str(N1)+'''
+# 第3齒輪齒數
+n_g3 ='''+str(N2)+'''
+# 第4齒輪齒數
+n_g4 ='''+str(N3)+'''
+# 第5齒輪齒數
+n_g5 ='''+str(N4)+'''
+# 第6齒輪齒數
+n_g6 ='''+str(N5)+'''
+# 第7齒輪齒數
+n_g7 ='''+str(N6)+'''
+# 第8齒輪齒數
+n_g8 ='''+str(N7)+'''
+# 第9齒輪齒數
+n_g9 ='''+str(N8)+'''
+# 第10齒輪齒數
+n_g10 ='''+str(N9)+'''
+
+# 計算兩齒輪的節圓半徑
+rp_g1 = m*n_g1/2
+rp_g2 = m*n_g2/2
+rp_g3 = m*n_g3/2
+rp_g4 = m*n_g4/2
+rp_g5= m*n_g5/2
+rp_g6= m*n_g6/2
+rp_g7= m*n_g7/2
+rp_g8= m*n_g8/2
+rp_g9= m*n_g9/2
+rp_g10= m*n_g10/2
+
+
+# 繪圖第1齒輪的圓心座標
+x_g1 = 400
+y_g1 = 400
+# 第2齒輪的圓心座標, 假設排列成水平, 表示各齒輪圓心 y 座標相同
+x_g2 = x_g1
+y_g2 = y_g1+rp_g1 + rp_g2
+
+# 第3齒輪的圓心座標
+x_g3 = x_g2+ rp_g2+rp_g3
+y_g3 = y_g2
+
+# 第4齒輪的圓心座標
+x_g4 = x_g3
+y_g4 = y_g3 + rp_g3+rp_g4
+
+# 第5齒輪的圓心座標
+x_g5 = x_g4+ rp_g4+rp_g5
+y_g5 = y_g4
+
+# 第6齒輪的圓心座標
+x_g6 = x_g5
+y_g6 = y_g5 + rp_g5+rp_g6
+
+# 第7齒輪的圓心座標
+x_g7= x_g6+ rp_g6+rp_g7
+y_g7 = y_g6
+
+# 第8齒輪的圓心座標
+x_g8 = x_g7
+y_g8 = y_g7+ rp_g7+rp_g8
+
+# 第9齒輪的圓心座標
+x_g9 = x_g8+ rp_g8+rp_g9
+y_g9 = y_g8
+
+# 第10齒輪的圓心座標
+x_g10 = x_g9
+y_g10 = y_g9+ rp_g9+rp_g10
+
+
+# 將第1齒輪順時鐘轉 90 度
+# 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
+
+ctx.font = "10px Verdana";
+ctx.fillText("組員:31",x_g1, y_g1);
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g1, y_g1)
+# rotate to engage
+ctx.rotate(pi)
+# put it back
+ctx.translate(-x_g1, -y_g1)
+spur.Spur(ctx).Gear(x_g1, y_g1, rp_g1, n_g1, pa, "blue")
+ctx.restore()
+
+# 將第2齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g2, y_g2)
+# rotate to engage
+ctx.rotate(pi/n_g2)
+# put it back
+ctx.translate(-x_g2, -y_g2)
+spur.Spur(ctx).Gear(x_g2, y_g2, rp_g2, n_g2, pa, "black")
+ctx.restore()
+
+# 將第3齒輪順時鐘轉 90 度
+# 使用 ctx.save() 與 ctx.restore() 以確保各齒輪以相對座標進行旋轉繪圖
+
+ctx.font = "10px Verdana";
+ctx.fillText("組員:02",x_g3, y_g3);
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g3, y_g3)
+# rotate to engage
+ctx.rotate(-pi/2-pi/n_g3+(pi/2+pi/n_g2)*n_g2/n_g3)
+# put it back
+ctx.translate(-x_g3, -y_g3)
+spur.Spur(ctx).Gear(x_g3, y_g3, rp_g3, n_g3, pa, "red")
+ctx.restore()
+
+# 將第4齒輪逆時鐘轉 90 度之後, 再多轉一齒, 以便與第1齒輪進行囓合
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g4, y_g4)
+# rotate to engage
+ctx.rotate(-pi/n_g4+(-pi/2+pi/n_g3)*n_g3/n_g4-(pi/2+pi/n_g2)*n_g2/n_g4)
+# put it back
+ctx.translate(-x_g4, -y_g4)
+spur.Spur(ctx).Gear(x_g4, y_g4, rp_g4, n_g4, pa, "blue")
+ctx.restore()
+
+
+#第5齒輪
+ctx.font = "10px Verdana";
+ctx.fillText("組員:05",x_g5, y_g5);
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g5, y_g5)
+# rotate to engage
+
+#-pi/2 +pi/n_g5  +(pi/2 -pi/n_g4+(-pi/2+pi/n_g3)*n_g3/n_g4-(pi/2+pi/n_g2)*n_g2/n_g4)*(n_g4/n_g5)
+
+ctx.rotate(-pi/2 +pi/n_g5+(pi/2-pi/n_g4-(-pi/2+pi/n_g3)*n_g3/n_g4-(-pi/2+pi/n_g2)*n_g2/n_g4)*(n_g4/n_g5))
+
+# put it back
+ctx.translate(-x_g5, -y_g5)
+spur.Spur(ctx).Gear(x_g5, y_g5, rp_g5, n_g5, pa, "purple")
+ctx.restore()
+
+#第6齒輪
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g6, y_g6)
+# rotate to engage
+ctx.rotate(-pi/n_g6+(-pi/2+pi/n_g5)*n_g5/n_g6-(pi/2+pi/n_g4)*n_g4/n_g6-(pi/2+pi/n_g3)*n_g3/n_g6-(pi/2+pi/n_g2)*n_g2/n_g6)
+# put it back
+ctx.translate(-x_g6, -y_g6)
+spur.Spur(ctx).Gear(x_g6, y_g6, rp_g6, n_g6, pa, "blue")
+ctx.restore()
+
+#第7齒輪
+
+ctx.font = "10px Verdana";
+ctx.fillText("組員:06",x_g7, y_g7);
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g7, y_g7)
+p=-pi/n_g6+(pi/2+pi/n_g5)*n_g5/n_g6-(-pi/2+pi/n_g4)*n_g4/n_g6+(pi/2+pi/n_g3)*n_g3/n_g6-(-pi/2+pi/n_g2)*n_g2/n_g6
+# rotate to engage
+ctx.rotate(-pi/2+pi/n_g7+(pi/2+p)*(n_g6/n_g7))
+# put it back
+ctx.translate(-x_g7, -y_g7)
+spur.Spur(ctx).Gear(x_g7, y_g7, rp_g7, n_g7, pa, "red")
+ctx.restore()
+
+#第8齒輪
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g8, y_g8)
+# rotate to engage
+ctx.rotate(-pi/n_g8+(-pi/2+pi/n_g7)*n_g7/n_g8-(pi/2+pi/n_g6)*n_g6/n_g8-(pi/2+pi/n_g5)*n_g5/n_g8-(pi/2+pi/n_g4)*n_g4/n_g8-(pi/2+pi/n_g3)*n_g3/n_g8-(pi/2+pi/n_g2)*n_g2/n_g8)
+# put it back
+ctx.translate(-x_g8, -y_g8)
+spur.Spur(ctx).Gear(x_g8, y_g8, rp_g8, n_g8, pa, " brown")
+ctx.restore()
+
+
+
+#第9齒輪
+ctx.font = "10px Verdana";
+ctx.fillText("組員:07",x_g9, y_g9);
+
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g9, y_g9)
+p=-pi/n_g8+(pi/2+pi/n_g7)*n_g7/n_g8-(-pi/2+pi/n_g6)*n_g6/n_g8+(pi/2+pi/n_g5)*n_g5/n_g8-(-pi/2+pi/n_g4)*n_g4/n_g8+(pi/2+pi/n_g3)*n_g3/n_g8-(-pi/2+pi/n_g2)*n_g2/n_g8
+# rotate to engage
+ctx.rotate(-pi/2+pi/n_g9+(pi/2+p)*(n_g8/n_g9))
+# put it back
+ctx.translate(-x_g9, -y_g9)
+spur.Spur(ctx).Gear(x_g9, y_g9, rp_g9, n_g9, pa, "blue")
+ctx.restore()
+
+#第10齒輪
+ctx.save()
+# translate to the origin of second gear
+ctx.translate(x_g10, y_g10)
+# rotate to engage
+ctx.rotate(-pi/n_g10+(-pi/2+pi/n_g9)*n_g9/n_g10-(pi/2+pi/n_g8)*n_g8/n_g10-(pi/2+pi/n_g7)*n_g7/n_g10-(pi/2+pi/n_g6)*n_g6/n_g10-(pi/2+pi/n_g5)*n_g5/n_g10-(pi/2+pi/n_g4)*n_g4/n_g10-(pi/2+pi/n_g3)*n_g3/n_g10-(pi/2+pi/n_g2)*n_g2/n_g10)
+# put it back
+ctx.translate(-x_g10, -y_g10)
+spur.Spur(ctx).Gear(x_g10, y_g10, rp_g10, n_g10, pa, "green")
+ctx.restore()
+
+
+
+&lt;/script&gt;
+&lt;canvas id="plotarea" width="3000" height="3000"&gt;&lt;/canvas&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+
+    return outstring
+
+</t>
+<t tx="2015.20150628113415.1">@cherrypy.expose
+# N 為齒數, M 為模數, P 為壓力角
+def drawspur_1(self, N=15, N1=24,N2=15, N3=24,N4=15,N5=24,N6=15,N7=24,N8=15,N9=24,M=10, P=20):
+    outstring = '''
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;form method=POST action=drawspuraction_1&gt;
+
+
+第1齒數:&lt;br /&gt;
+    &lt;select name="N"&gt;
+    '''
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+第2齒數:&lt;br /&gt;
+    &lt;select name="N1"&gt;
+    '''
+    j=24
+    outstring +=''' &lt;option value = '''+str(j)+'''&gt;'''+str(j)+'''&lt;/option&gt;'''
+    
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+第3齒數:&lt;br /&gt;
+    &lt;select name="N2"&gt;
+    '''
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+第4齒數:&lt;br /&gt;
+    &lt;select name="N3"&gt;
+    '''
+    j=24
+    outstring +=''' &lt;option value = '''+str(j)+'''&gt;'''+str(j)+'''&lt;/option&gt;'''
+    
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+   第5齒數:&lt;br /&gt;
+    &lt;select name="N4"&gt;
+    '''
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+第6齒數:&lt;br /&gt;
+    &lt;select name="N5"&gt;
+    '''
+    j=24
+    outstring +=''' &lt;option value = '''+str(j)+'''&gt;'''+str(j)+'''&lt;/option&gt;'''
+    
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+第7齒數:&lt;br /&gt;
+    &lt;select name="N6"&gt;
+    '''
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+第8齒數:&lt;br /&gt;
+    &lt;select name="N7"&gt;
+    '''
+    j=24
+    outstring +=''' &lt;option value = '''+str(j)+'''&gt;'''+str(j)+'''&lt;/option&gt;'''
+    
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+      第9齒數:&lt;br /&gt;
+     &lt;select name="N8"&gt;
+    '''
+    for j in range(15,80):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+  第10齒數:&lt;br /&gt;
+    &lt;select name="N9"&gt;
+    '''
+    j=24
+    outstring +=''' &lt;option value = '''+str(j)+'''&gt;'''+str(j)+'''&lt;/option&gt;'''
+    
+    for j in range(15,81):
+        outstring+=''' &lt;option value="'''+str(j)+'''"&gt;'''+str(j)+'''&lt;/option&gt;'''
+    outstring+='''
+   &lt;/select&gt;&lt;br/&gt;
+    
+模數  :&lt;input type=text name=M value='''+str(M)+'''&gt;&lt;br /&gt;
+
+壓力角:&lt;input type=text name=P value = '''+str(P)+'''&gt;&lt;br /&gt;
+&lt;input type=submit value=畫出正齒輪輪廓&gt;
+&lt;/form&gt;
+&lt;br /&gt;
+&lt;!-- 載入 brython.js --&gt;
+&lt;script type="text/javascript" src="/static/Brython3.1.1-20150328-091302/brython.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+window.onload=function(){
+brython();
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+
+    return outstring</t>
 <t tx="amd.20150503172957.1"></t>
 <t tx="amd.20150503173008.1"># coding=utf-8
 # 上面的程式內容編碼必須在程式的第一或者第二行才會有作用
@@ -2961,6 +3361,11 @@ def index(self):
 &lt;h2&gt;題目一&lt;/h2&gt;
 
 &lt;a href="drawspur"&gt;gear&lt;/a&gt;&lt;br /&gt;
+
+&lt;h2&gt;題目二&lt;/h2&gt;
+
+&lt;a href="drawspur_1"&gt;gear2&lt;/a&gt;&lt;br /&gt;
+
 
 '''
     return outstring
